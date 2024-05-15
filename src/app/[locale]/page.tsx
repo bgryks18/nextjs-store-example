@@ -1,7 +1,6 @@
-import React from 'react'
+import { useTranslations } from 'next-intl'
 
-const page = () => {
-  return <div>page</div>
+export default function Index() {
+  const t = useTranslations()
+  return <h1>{t('common.Index.title')}</h1>
 }
-
-export default page
