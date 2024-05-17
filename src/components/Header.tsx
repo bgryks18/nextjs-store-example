@@ -24,13 +24,6 @@ import LoginIcon from '@mui/icons-material/Login'
 import { useId, useState } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
-// import {
-//   Link,
-//   createSearchParams,
-//   useNavigate,
-//   createPath,
-//   useSearchParams,
-// } from 'next/router'
 import { PATH } from '@/types/common'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { getCurrency } from '@/utils/currency'
