@@ -5,7 +5,7 @@ import axios, {
 } from 'axios'
 import qs from 'qs'
 
-const API_URL = 'https://api.escuelajs.co/api/v1'
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const API = axios.create({
   baseURL: API_URL,

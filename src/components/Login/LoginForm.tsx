@@ -11,10 +11,9 @@ import { FormGroup } from '@mui/material'
 import { makeStyles } from 'tss-react/mui'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useSetAtom } from 'jotai'
-import { errorState } from '@/store/ui'
 import { useRouter } from 'next/navigation'
 import { PATH } from '@/types/common'
+import { useSnackbar } from 'notistack'
 
 interface IFormInput {
   email: string
@@ -42,7 +41,7 @@ const useStyles = makeStyles()((theme) => ({
 
 const LoginForm = () => {
   const { mutateAsync: mutateGetSession, isPending, isError } = useGetSession()
-  const setError = useSetAtom(errorState)
+  const { enqueueSnackbar } = useSnackbar()
   const { classes } = useStyles()
   const { register, handleSubmit } = useForm<IFormInput>()
   const router = useRouter()
@@ -51,6 +50,13 @@ const LoginForm = () => {
       await mutateGetSession()
       router.push(PATH.HOME)
     } catch (e: any) {
+      enqueueSnackbar(e?.message || 'An error occurred', {
+        variant: 'error',
+        anchorOrigin: {
+          horizontal: 'left',
+          vertical: 'bottom',
+        },
+      })
       console.log('login error', e)
     }
   }
@@ -84,14 +90,6 @@ const LoginForm = () => {
           </Button>
         </FormControl>
       </FormGroup>
-      <Snackbar
-        open={isError}
-        autoHideDuration={1000}
-        onClose={() => {
-          console.log('CLOSED')
-        }}
-        message="Error"
-      />
     </form>
   )
 }

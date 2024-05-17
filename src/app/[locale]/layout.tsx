@@ -3,6 +3,7 @@ import { Ubuntu } from 'next/font/google'
 import Theme from '@/components/Theme/Theme'
 import JotaiProvider from '@/components/Layout/Provider'
 import ReactQueryProvider from '@/components/Layout/QueryClient'
+import NotificationProvider from '@/components/Layout/NotificationProvider'
 
 const ubuntu = Ubuntu({
   subsets: ['latin-ext', 'cyrillic-ext', 'greek-ext'],
@@ -26,7 +27,9 @@ export default function LocaleLayout({
       <body className={ubuntu.className}>
         <JotaiProvider>
           <ReactQueryProvider>
-            <Theme>{children}</Theme>
+            <Theme>
+              <NotificationProvider>{children}</NotificationProvider>
+            </Theme>
           </ReactQueryProvider>
         </JotaiProvider>
       </body>
