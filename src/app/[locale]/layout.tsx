@@ -1,7 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
-const inter = Inter({ subsets: ['latin'] })
+import { Ubuntu } from 'next/font/google'
+import Theme from '@/components/Theme/Theme'
+import JotaiProvider from '@/components/Layout/Provider'
+import ReactQueryProvider from '@/components/Layout/QueryClient'
+
+const ubuntu = Ubuntu({
+  subsets: ['latin-ext', 'cyrillic-ext', 'greek-ext'],
+  weight: ['300', '400', '500', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +23,13 @@ export default function LocaleLayout({
 }>) {
   return (
     <html lang={locale}>
-      <body className={inter.className}>{children}</body>
+      <body className={ubuntu.className}>
+        <JotaiProvider>
+          <ReactQueryProvider>
+            <Theme>{children}</Theme>
+          </ReactQueryProvider>
+        </JotaiProvider>
+      </body>
     </html>
   )
 }

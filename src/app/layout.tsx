@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-const inter = Inter({ subsets: ['latin'] })
+import { Ubuntu } from 'next/font/google'
+import Theme from '@/components/Theme/Theme'
+import JotaiProvider from '@/components/Layout/Provider'
+import ReactQueryProvider from '@/components/Layout/QueryClient'
+import '@/app/styles/app.scss'
+const ubuntu = Ubuntu({
+  subsets: ['latin-ext', 'cyrillic-ext', 'greek-ext'],
+  weight: ['300', '400', '500', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -9,12 +16,20 @@ export const metadata: Metadata = {
 
 export default function LocaleLayout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode
+  params: Record<string, any>
 }>) {
   return (
-    <html>
-      <body className={inter.className}>{children}</body>
+    <html lang={locale}>
+      <body className={ubuntu.className}>
+        <JotaiProvider>
+          <ReactQueryProvider>
+            <Theme>{children}</Theme>
+          </ReactQueryProvider>
+        </JotaiProvider>
+      </body>
     </html>
   )
 }

@@ -1,6 +1,8 @@
-import { useTranslations } from 'next-intl'
+import Page from '@/components/Page'
+import React from 'react'
 
-export default function Index() {
-  const t = useTranslations()
-  return <h1>{t('common.Index.title')}</h1>
+const page = () => {
+  return <Page>WELCOME</Page>
 }
+
+export default page
