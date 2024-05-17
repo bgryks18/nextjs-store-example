@@ -1,5 +1,5 @@
 'use client'
-import { useGetSession } from '@/api/user'
+import { useGetSession } from '@/axios/user'
 import {
   Button,
   FormControl,
