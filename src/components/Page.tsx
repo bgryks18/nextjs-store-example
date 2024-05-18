@@ -19,7 +19,7 @@ const Page = ({
   return (
     <>
       {showHeader && <Header />}
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ marginBottom: 5 }}>
         <Grid container columnSpacing="24px">
           <Grid
             item

@@ -1,5 +1,6 @@
 {
-  "Index": {
-    "title": "Hello world!"
+  "notification": {
+    "noResultForKey": "No result for the key specified.",
+    "noProductsInCard": "No products in your card."
   }
 }

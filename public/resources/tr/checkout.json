@@ -1,0 +1,15 @@
+{
+  "addCard": "Kartı Ekle",
+  "remember": "Kartı Hatırla",
+  "goToCart": "Sepete git",
+  "total": "Toplam",
+  "form": {
+    "title": "Devam etmek için bir kart ekleyin.",
+    "cardNumber": "Kart Numarası",
+    "expiryDate": "Son Kullanım Tarihi",
+    "cardHolderName": "Kart Sahibi Adı",
+    "cardHolderNamePlaceholder": "Kart sahibinin tam adını girin",
+    "rememberCard": "Bu kartı hatırla",
+    "submit": "Kart Ekle"
+  }
+}

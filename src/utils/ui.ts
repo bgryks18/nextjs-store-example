@@ -4,8 +4,8 @@ import PriceCheck from '@mui/icons-material/PriceCheck'
 
 export const categories = () => {
   return [
-    { id: 'free-ebooks', label: 'Free E-Books', icon: FreeBreakfastIcon },
-    { id: 'paid-ebooks', label: 'Paid E-Books', icon: PriceCheck },
-    { id: 'full', label: 'Viewable', icon: RemoveRedEyeOutlined },
+    { id: 'free-ebooks', label: 'category.free', icon: FreeBreakfastIcon },
+    { id: 'paid-ebooks', label: 'category.paid', icon: PriceCheck },
+    { id: 'full', label: 'category.viewable', icon: RemoveRedEyeOutlined },
   ]
 }

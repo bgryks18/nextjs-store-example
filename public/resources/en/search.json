@@ -1,0 +1,8 @@
+{
+  "filter": {
+    "title": "By Title",
+    "author": "By Author"
+  },
+  "submit": "Search",
+  "placeholder": "Type to search"
+}

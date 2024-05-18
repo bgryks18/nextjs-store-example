@@ -16,6 +16,8 @@ import Link from 'next/link'
 import { PATH } from '@/types/common'
 import { Chip } from '@mui/material'
 import LinkIcon from '@mui/icons-material/Link'
+import { useTranslations } from 'next-intl'
+
 const useStyles = makeStyles()((theme) => ({
   container: {
     position: 'relative',
@@ -109,6 +111,8 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 const ProductBox = (volume: Volume) => {
+  const t = useTranslations()
+
   const { id, volumeInfo, saleInfo } = volume
   const { classes } = useStyles()
 
@@ -116,6 +120,9 @@ const ProductBox = (volume: Volume) => {
     saleInfo.listPrice && saleInfo.retailPrice
       ? saleInfo.retailPrice.amount < saleInfo.listPrice.amount
       : false
+
+  console.log('TEST', t('common.noResultForKey'))
+
   return (
     <Card className={classes.container}>
       {discount && (
@@ -177,7 +184,7 @@ const ProductBox = (volume: Volume) => {
                 gap="2px"
                 className={classes.previewLink}
               >
-                <LinkIcon /> Click to preview
+                <LinkIcon /> {t('book.preview')}
               </Typography>
             </Link>
           )}

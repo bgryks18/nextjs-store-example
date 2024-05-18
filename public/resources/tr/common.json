@@ -1,5 +1,6 @@
 {
-  "Index": {
-    "title": "Merhaba dünya"
+  "notification": {
+    "noResultForKey": "Belirtilen kelimeyle ilgili sonuç bulunamadı.",
+    "noProductsInCard": "Sepetinizde hiç ürün yok."
   }
 }

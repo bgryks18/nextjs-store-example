@@ -32,6 +32,7 @@ import { makeStyles } from 'tss-react/mui'
 import Image from 'next/image'
 import { useSearchParams, useRouter } from 'next/navigation'
 import qs from 'qs'
+import { useTranslations } from 'next-intl'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -233,6 +234,7 @@ const MenuLinks = () => {
   const userMobileMenuId = useId()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const t = useTranslations()
   const { cart, cartCount, cartTotal } = useCart()
 
   const [anchorUserBasketPopoverEl, setAnchorUserBasketPopoverEl] =
@@ -278,7 +280,7 @@ const MenuLinks = () => {
         {getCurrency(
           (item.volume.saleInfo.retailPrice?.amount || 0) * item.quantity,
           {
-            currency: item.volume.saleInfo.retailPrice?.currencyCode,
+            currency: item.volume.saleInfo.retailPrice!.currencyCode,
           },
           item.volume.saleInfo.country
         )}
@@ -317,7 +319,7 @@ const MenuLinks = () => {
               component="div"
               className={classes.menuItem}
             >
-              <span className={classes.quantity}>Total</span>
+              <span className={classes.quantity}>{t('checkout.total')}</span>
               <span className={classes.price}>
                 {getCurrency(
                   cartTotal,
@@ -328,13 +330,13 @@ const MenuLinks = () => {
                 )}
               </span>
             </Typography>
-            <MenuItem className={classes.menuItem}>
-              <Link href={PATH.CHECKOUT}>
+            <Link href={PATH.CHECKOUT}>
+              <MenuItem className={classes.menuItem}>
                 <Typography variant="body2" component="span" fontWeight={400}>
-                  Go to cart
+                  {t('checkout.goToCart')}
                 </Typography>
-              </Link>
-            </MenuItem>
+              </MenuItem>
+            </Link>
           </Box>
         ) : (
           <Typography
@@ -342,7 +344,7 @@ const MenuLinks = () => {
             className={classes.menuItem}
             component="div"
           >
-            No products in your cart
+            {t('common.notification.noProductsInCard')}
           </Typography>
         )}
       </Menu>
@@ -397,7 +399,9 @@ const MenuLinks = () => {
               className={classes.menuItem}
             >
               <Typography variant="caption" component="span" fontWeight={400}>
-                <Link href={PATH.CHECKOUT}>Go to cart</Link>
+                <Link href={PATH.CHECKOUT}>
+                  {t('common.notification.noProductsInCard')}
+                </Link>
               </Typography>
             </MenuItem>
           </Box>
@@ -407,7 +411,7 @@ const MenuLinks = () => {
             className={classes.menuItem}
             component="div"
           >
-            No products in your cart
+            {t('common.notification.noProductsInCard')}
           </Typography>
         )}
       </Menu>
@@ -430,6 +434,8 @@ const SearchForm = () => {
   const { register, handleSubmit } = useForm<SearchFormProps>()
   const router = useRouter()
   const currentSearchParamms = useSearchParams()
+  const t = useTranslations()
+
   const onSubmit: SubmitHandler<SearchFormProps> = async (data) => {
     const currentQuery = currentSearchParamms.get('q')
     if (
@@ -449,7 +455,7 @@ const SearchForm = () => {
       <OutlinedInput
         size="medium"
         margin="none"
-        placeholder="Searching for"
+        placeholder={t('search.placeholder')}
         startAdornment={<SearchIcon color="action" />}
         defaultValue={currentSearchParamms.get('q')}
         endAdornment={
@@ -463,15 +469,15 @@ const SearchForm = () => {
               {...register('by')}
               // onChange={handleChange}
             >
-              <MenuItem value={'title'}>By Title</MenuItem>
-              <MenuItem value={'author'}>By Author</MenuItem>
+              <MenuItem value={'title'}>{t('search.filter.title')}</MenuItem>
+              <MenuItem value={'author'}>{t('search.filter.author')}</MenuItem>
             </Select>
             <Button
               variant="contained"
               className={classes.searchButton}
               type="submit"
             >
-              Search
+              {t('search.submit')}
             </Button>
           </>
         }

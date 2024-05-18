@@ -1,0 +1,8 @@
+{
+  "filter": {
+    "title": "Başlığa göre",
+    "author": "Yazara göre"
+  },
+  "submit": "Ara",
+  "placeholder": "Arama Yap"
+}

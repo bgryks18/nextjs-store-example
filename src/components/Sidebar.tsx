@@ -6,6 +6,7 @@ import { categories } from '@/utils/ui'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import classnames from 'classnames'
+import { useTranslations } from 'next-intl'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
@@ -91,12 +92,12 @@ const useStyles = makeStyles()((theme) => ({
 const Sidebar = () => {
   const { classes } = useStyles()
   const searchParams = useSearchParams()
-
+  const t = useTranslations()
   return (
     <div className={classes.container}>
       <Paper className={classes.paper}>
         <Typography variant="body1" className={classes.title} component="div">
-          Top Categories
+          {t('category.title')}
           <Divider />
         </Typography>
 
@@ -118,7 +119,7 @@ const Sidebar = () => {
             <MenuItem>
               <item.icon />
               <Typography variant="body2" fontWeight="medium" component="span">
-                {item.label}
+                {t(item.label)}
               </Typography>
             </MenuItem>
           </Link>

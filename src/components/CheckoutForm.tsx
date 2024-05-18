@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import {
@@ -25,9 +25,11 @@ import { useCart } from '@/hooks/useCart'
 import { getCurrency } from '@/utils/currency'
 import { PATH } from '@/types/common'
 import { redirectTo } from '@/utils/lib'
+import { useTranslations } from 'next-intl'
 
 export default function CheckoutForm() {
   const { cart, cartTotal } = useCart()
+  const t = useTranslations()
   const cartItems = cart.map((item) => (
     <TableRow key={item.id}>
       <TableCell sx={{ fontWeight: 'bold' }}>
@@ -44,6 +46,12 @@ export default function CheckoutForm() {
       </TableCell>
     </TableRow>
   ))
+
+  useEffect(() => {
+    if (cart.length === 0 || !cartTotal) {
+      redirectTo(PATH.HOME, 'replace')
+    }
+  }, [])
 
   if (cart.length === 0 || !cartTotal) {
     redirectTo(PATH.HOME, 'replace')
@@ -69,7 +77,9 @@ export default function CheckoutForm() {
           <TableBody>
             {cartItems}
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>
+                {t('checkout.total')}
+              </TableCell>
               <TableCell>
                 {getCurrency(
                   cartTotal,
@@ -84,7 +94,7 @@ export default function CheckoutForm() {
         </Table>
       </TableContainer>
       <Typography component="div" variant="h5" padding={2}>
-        Add a new card to continue
+        {t('checkout.form.title')}
       </Typography>
       <Divider />
       <CardContent
@@ -95,11 +105,11 @@ export default function CheckoutForm() {
         }}
       >
         <FormControl sx={{ gridColumn: '1/-1' }}>
-          <FormLabel>Card number</FormLabel>
+          <FormLabel>{t('checkout.form.cardNumber')}</FormLabel>
           <Input endAdornment={<CreditCardIcon />} />
         </FormControl>
         <FormControl>
-          <FormLabel>Expiry date</FormLabel>
+          <FormLabel>{t('checkout.form.expiryDate')}</FormLabel>
           <Input endAdornment={<CreditCardIcon />} />
         </FormControl>
         <FormControl>
@@ -107,10 +117,13 @@ export default function CheckoutForm() {
           <Input endAdornment={<InfoOutlined />} />
         </FormControl>
         <FormControl sx={{ gridColumn: '1/-1' }}>
-          <FormLabel>Card holder name</FormLabel>
-          <Input placeholder="Enter cardholder's full name" />
+          <FormLabel>{t('checkout.form.cardHolderName')}</FormLabel>
+          <Input placeholder={t('checkout.form.cardHolderNamePlaceholder')} />
         </FormControl>
-        <FormControlLabel control={<Checkbox />} label="Remember the card" />
+        <FormControlLabel
+          control={<Checkbox />}
+          label={t('checkout.form.rememberCard')}
+        />
         <CardActions sx={{ gridColumn: '1/-1' }}>
           <Button
             variant="outlined"
@@ -119,7 +132,7 @@ export default function CheckoutForm() {
               textTransform: 'unset',
             }}
           >
-            Add card
+            {t('checkout.form.submit')}
           </Button>
         </CardActions>
       </CardContent>

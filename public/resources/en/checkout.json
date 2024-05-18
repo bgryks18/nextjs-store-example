@@ -1,0 +1,15 @@
+{
+  "addCard": "Add Card",
+  "remember": "Remember the card",
+  "goToCart": "Go to cart",
+  "total": "Total",
+  "form": {
+    "title": "Add a new card to continue.",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cardHolderName": "Card Holder Name",
+    "cardHolderNamePlaceholder": "Type full name of the card holder",
+    "rememberCard": "Remember this card",
+    "submit": "Add card"
+  }
+}
