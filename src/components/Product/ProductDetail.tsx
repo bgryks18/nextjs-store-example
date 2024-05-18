@@ -17,6 +17,7 @@ import { PATH } from '@/types/common'
 import { Chip } from '@mui/material'
 import LinkIcon from '@mui/icons-material/Link'
 import { useTranslations } from 'next-intl'
+import DOMPurify from 'dompurify'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
@@ -121,7 +122,11 @@ const ProductBox = (volume: Volume) => {
       ? saleInfo.retailPrice.amount < saleInfo.listPrice.amount
       : false
 
-  console.log('TEST', t('common.noResultForKey'))
+  const sanitizedDescription = DOMPurify.sanitize(volumeInfo.description)
+
+  const sanitizedImageLink = DOMPurify.sanitize(
+    volumeInfo.imageLinks?.thumbnail || ''
+  )
 
   return (
     <Card className={classes.container}>
@@ -132,7 +137,7 @@ const ProductBox = (volume: Volume) => {
       )}
       <CardMedia
         className={classes.cardMedia}
-        image={volumeInfo.imageLinks?.thumbnail || ''}
+        image={sanitizedImageLink}
         title={volumeInfo.title}
       />
       <CardContent className={classes.cardContent}>
@@ -170,7 +175,11 @@ const ProductBox = (volume: Volume) => {
             fontWeight="400"
             color="GrayText"
           >
-            {volumeInfo.description}
+            <Typography
+              dangerouslySetInnerHTML={{
+                __html: sanitizedDescription,
+              }}
+            ></Typography>
           </Typography>
 
           {volumeInfo.previewLink && (

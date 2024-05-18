@@ -14,6 +14,7 @@ import { Volume } from '@/types/book'
 import DiscountIcon from '@mui/icons-material/Discount'
 import Link from 'next/link'
 import { PATH } from '@/types/common'
+import DOMPurify from 'dompurify'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
@@ -106,6 +107,10 @@ const ProductBox = (volume: Volume) => {
       ? saleInfo.retailPrice.amount < saleInfo.listPrice.amount
       : false
 
+  const sanitizedImageLink = DOMPurify.sanitize(
+    volumeInfo.imageLinks?.thumbnail || ''
+  )
+
   return (
     <Card className={classes.container}>
       {discount && (
@@ -115,7 +120,7 @@ const ProductBox = (volume: Volume) => {
       )}
       <CardMedia
         className={classes.cardMedia}
-        image={volumeInfo.imageLinks?.thumbnail || ''}
+        image={sanitizedImageLink}
         title={volumeInfo.title}
       />
       <CardContent className={classes.cardContent}>
