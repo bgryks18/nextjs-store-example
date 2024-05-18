@@ -19,20 +19,20 @@ const Page = ({
   return (
     <>
       {showHeader && <Header />}
-      <Container maxWidth="xl" sx={{ marginBottom: 5 }}>
-        <Grid container>
+      <Container maxWidth="xl">
+        <Grid container columnSpacing="24px">
           <Grid
             item
             xs={12}
             md={showSidebar ? 8 : 12}
             lg={showSidebar ? 9 : 12}
-            paddingTop="20px"
             order={isMobile ? 1 : 0}
+            paddingTop="24px"
           >
             {children}
           </Grid>
           {showSidebar && (
-            <Grid item xs={12} md={4} lg={3} paddingTop="20px">
+            <Grid item xs={12} md={4} lg={3} paddingTop="24px">
               <Sidebar />
             </Grid>
           )}

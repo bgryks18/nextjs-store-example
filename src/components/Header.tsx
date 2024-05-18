@@ -1,4 +1,5 @@
 'use client'
+import React, { useId, useState } from 'react'
 import {
   AppBar,
   Badge,
@@ -11,6 +12,7 @@ import {
   Menu,
   MenuItem,
   OutlinedInput,
+  Select,
   Theme,
   Toolbar,
   Typography,
@@ -20,16 +22,16 @@ import SearchIcon from '@mui/icons-material/Search'
 import PersonIcon from '@mui/icons-material/PersonOutlined'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasketOutlined'
 import MoreIcon from '@mui/icons-material/MoreVert'
-import LoginIcon from '@mui/icons-material/Login'
-import { useId, useState } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useCart } from '@/hooks/useCart'
 import { PATH } from '@/types/common'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { getCurrency } from '@/utils/currency'
 import Link from 'next/link'
 import { makeStyles } from 'tss-react/mui'
 import Image from 'next/image'
+import { useSearchParams, useRouter } from 'next/navigation'
+import qs from 'qs'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -39,6 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     top: 0,
+    boxShadow: '0.5px 0.5px 2px #ddd',
     [theme.breakpoints.down('md')]: {
       boxShadow: '0.5px 0.5px 2px #ddd',
       height: '60px',
@@ -52,7 +55,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 10,
-    background: 'red',
   },
 
   logo: {
@@ -109,7 +111,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
         },
 
         '&:-webkit-autofill:focus': {
-          background: 'red',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: theme.palette.primary.main,
           transition: 'background-color 1s ease-in-out 0s',
@@ -170,13 +171,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   quantity: {
-    fontSize: '14px',
-    fontWeight: '600',
+    fontWeight: 400,
   },
   price: {
-    fontSize: '14px',
-    fontWeight: '600',
+    fontWeight: 400,
     color: theme.palette.secondary.main,
+  },
+  select: {
+    border: '0 !important',
+    padding: 0,
+    fontSize: 14,
+    '& *': {
+      border: '0 !important',
+      padding: 0,
+      margin: 0,
+    },
   },
 }))
 
@@ -198,7 +207,7 @@ const Header = () => {
           >
             <Grid item xs={2} md={3}>
               <div className={classes.logo}>
-                <Link href="/" className={classes.logoLink}>
+                <Link href={PATH.HOME} className={classes.logoLink}>
                   <Image src={logoUrl} alt="logo" fill />
                 </Link>
               </div>
@@ -220,31 +229,17 @@ export default Header
 
 const MenuLinks = () => {
   const { classes } = useStyles()
-  const userMenuPopoverId = useId()
   const userBasketPopoverId = useId()
   const userMobileMenuId = useId()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const { isLoggedIn } = useCurrentUser()
-
-  const [anchorUserMenuPopoverEl, setAnchorUserMenuPopoverEl] =
-    useState<HTMLButtonElement | null>(null)
+  const { cart, cartCount, cartTotal } = useCart()
 
   const [anchorUserBasketPopoverEl, setAnchorUserBasketPopoverEl] =
     useState<HTMLButtonElement | null>(null)
 
   const [anchorUserMobileMenuEl, setAnchorUserMobileMenuEl] =
     useState<HTMLButtonElement | null>(null)
-
-  const handleUserMenuPopoverClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorUserMenuPopoverEl(event.currentTarget)
-  }
-
-  const handleUserMenuPopoverClose = () => {
-    setAnchorUserMenuPopoverEl(null)
-  }
 
   const handleUserBasketPopoverClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -266,56 +261,34 @@ const MenuLinks = () => {
     setAnchorUserMobileMenuEl(null)
   }
 
-  const isUserMenuPopoverOpen = Boolean(anchorUserMenuPopoverEl)
   const isUserBasketPopoverOpen = Boolean(anchorUserBasketPopoverEl)
   const isUserMobileMenuOpen = Boolean(anchorUserMobileMenuEl)
 
-  // const cartItems = Array.isArray(cart) ? (
-  //   cart.map((item) => (
-  //     <Typography
-  //       variant="body1"
-  //       component="div"
-  //       className={classes.menuItem}
-  //       key={item.productId}
-  //     >
-  //       <span className={classes.quantity}>
-  //         {item.quantity} {item.name}
-  //       </span>
-  //       <span className={classes.price}>
-  //         {getCurrency(item.price * item.quantity)}
-  //       </span>
-  //     </Typography>
-  //   ))
-  // ) : (
-  //   <></>
-  // );
+  const cartItems = cart.map((item) => (
+    <Typography
+      variant={isMobile ? 'caption' : 'body2'}
+      component="div"
+      className={classes.menuItem}
+      key={item.id}
+    >
+      <span className={classes.quantity}>
+        {item.quantity} {item.title}
+      </span>
+      <span className={classes.price}>
+        {getCurrency(
+          (item.volume.saleInfo.retailPrice?.amount || 0) * item.quantity,
+          {
+            currency: item.volume.saleInfo.retailPrice?.currencyCode,
+          },
+          item.volume.saleInfo.country
+        )}
+      </span>
+    </Typography>
+  ))
 
-  const renderMenu = isLoggedIn ? (
+  const renderMenu = (
     <>
-      <IconButton
-        size="large"
-        className={classes.iconButton}
-        onClick={handleUserMenuPopoverClick}
-      >
-        <PersonIcon />
-      </IconButton>
-      <Menu
-        id={userMenuPopoverId}
-        open={isUserMenuPopoverOpen}
-        anchorEl={anchorUserMenuPopoverEl}
-        onClose={handleUserMenuPopoverClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        classes={{ paper: classes.popover }}
-      >
-        <Link href={PATH.LOGOUT} className={classes.link}>
-          <MenuItem className={classes.menuItem}>Logout</MenuItem>
-        </Link>
-      </Menu>
-
-      <Badge badgeContent={5} color="primary">
+      <Badge badgeContent={cartCount} color="primary">
         <IconButton
           size="large"
           className={classes.iconButton}
@@ -335,51 +308,50 @@ const MenuLinks = () => {
         }}
         classes={{ paper: classes.popover }}
       >
-        {/* {cartCount > 0 ? (
+        {cartCount > 0 ? (
           <Box>
             {cartItems}
             <Divider />
             <Typography
-              variant="body1"
+              variant="body2"
               component="div"
               className={classes.menuItem}
             >
               <span className={classes.quantity}>Total</span>
-              <span className={classes.price}>{getCurrency(cartTotal)}</span>
+              <span className={classes.price}>
+                {getCurrency(
+                  cartTotal,
+                  {
+                    currency: cart[0].volume.saleInfo.retailPrice?.currencyCode,
+                  },
+                  cart[0].volume.saleInfo.country
+                )}
+              </span>
             </Typography>
-            <MenuItem
-              onClick={handleUserMenuPopoverClose}
-              className={classes.menuItem}
-            >
-              <Typography variant="body2" fontWeight="600" component="span">
-                Go to cart
-              </Typography>
+            <MenuItem className={classes.menuItem}>
+              <Link href={PATH.CHECKOUT}>
+                <Typography variant="body2" component="span" fontWeight={400}>
+                  Go to cart
+                </Typography>
+              </Link>
             </MenuItem>
           </Box>
         ) : (
           <Typography
-            variant="body1"
+            variant="body2"
             className={classes.menuItem}
             component="div"
           >
             No products in your cart
           </Typography>
-        )} */}
+        )}
       </Menu>
-    </>
-  ) : (
-    <>
-      <Link href={PATH.LOGIN}>
-        <IconButton size="large" className={classes.iconButton}>
-          <LoginIcon />
-        </IconButton>
-      </Link>
     </>
   )
 
-  const renderMobileMenu = isLoggedIn ? (
+  const renderMobileMenu = (
     <>
-      <Badge badgeContent={5} color="primary">
+      <Badge badgeContent={cartCount} color="primary">
         <IconButton
           size="small"
           className={classes.iconButton}
@@ -400,41 +372,45 @@ const MenuLinks = () => {
         }}
         classes={{ paper: classes.popover }}
       >
-        {5 > 0 && (
+        {cartCount > 0 ? (
           <Box>
-            {/* {cartItems} */}
+            {cartItems}
             <Divider />
             <Typography
-              variant="body1"
+              variant="caption"
               component="div"
               className={classes.menuItem}
             >
               <span className={classes.quantity}>Total</span>
-              <span className={classes.price}>{getCurrency(1200)}</span>
+              <span className={classes.price}>
+                {getCurrency(
+                  cartTotal,
+                  {
+                    currency: cart[0].volume.saleInfo.retailPrice?.currencyCode,
+                  },
+                  cart[0].volume.saleInfo.country
+                )}
+              </span>
             </Typography>
             <MenuItem
               onClick={handleUserMobileMenuClose}
               className={classes.menuItem}
             >
-              <Typography variant="body2" fontWeight="600" component="span">
-                Go to cart
+              <Typography variant="caption" component="span" fontWeight={400}>
+                <Link href={PATH.CHECKOUT}>Go to cart</Link>
               </Typography>
             </MenuItem>
-            <Divider />
           </Box>
+        ) : (
+          <Typography
+            variant="caption"
+            className={classes.menuItem}
+            component="div"
+          >
+            No products in your cart
+          </Typography>
         )}
-        <Link href={PATH.LOGOUT} className={classes.link}>
-          <MenuItem className={classes.menuItem}>Logout</MenuItem>
-        </Link>
       </Menu>
-    </>
-  ) : (
-    <>
-      <Link href={PATH.LOGIN}>
-        <IconButton size="large" className={classes.iconButton}>
-          <LoginIcon />
-        </IconButton>
-      </Link>
     </>
   )
 
@@ -448,30 +424,26 @@ const MenuLinks = () => {
 
 interface SearchFormProps {
   q: string
+  by: 'title' | 'author'
 }
 const SearchForm = () => {
   const { register, handleSubmit } = useForm<SearchFormProps>()
-  // const navigate = useNavigate()
-  // const [currentSearchParamms] = useSearchParams()
+  const router = useRouter()
+  const currentSearchParamms = useSearchParams()
   const onSubmit: SubmitHandler<SearchFormProps> = async (data) => {
-    // const currentQuery = currentSearchParamms.get('q')
-    // if (
-    //   (!currentQuery && !data.q.trim()) ||
-    //   (currentQuery && currentQuery.trim() === data.q.trim())
-    // ) {
-    //   return
-    // }
-    // const searchParams = createSearchParams(
-    //   data as unknown as Record<string, string>
-    // )
-    // const createdPath = createPath({
-    //   pathname: PATH.HOME,
-    //   search: searchParams.toString(),
-    // })
-    // navigate(createdPath)
+    const currentQuery = currentSearchParamms.get('q')
+    if (
+      (!currentQuery && !data.q.trim()) ||
+      (currentQuery && currentQuery.trim() === data.q.trim())
+    ) {
+      return
+    }
+    const searchQuery = { q: data.q, by: data.by }
+    router.push(`${PATH.SEARCH}?${qs.stringify(searchQuery)}`, { scroll: true })
   }
 
   const { classes } = useStyles()
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.searchBox}>
       <OutlinedInput
@@ -479,15 +451,29 @@ const SearchForm = () => {
         margin="none"
         placeholder="Searching for"
         startAdornment={<SearchIcon color="action" />}
-        // defaultValue={currentSearchParamms.get("q")}
+        defaultValue={currentSearchParamms.get('q')}
         endAdornment={
-          <Button
-            variant="contained"
-            className={classes.searchButton}
-            type="submit"
-          >
-            Search
-          </Button>
+          <>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="By"
+              className={classes.select}
+              defaultValue="title"
+              {...register('by')}
+              // onChange={handleChange}
+            >
+              <MenuItem value={'title'}>By Title</MenuItem>
+              <MenuItem value={'author'}>By Author</MenuItem>
+            </Select>
+            <Button
+              variant="contained"
+              className={classes.searchButton}
+              type="submit"
+            >
+              Search
+            </Button>
+          </>
         }
         {...register('q')}
       />

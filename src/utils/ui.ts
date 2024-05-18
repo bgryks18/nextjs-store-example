@@ -1,17 +1,11 @@
-import EggIcon from '@mui/icons-material/EggOutlined'
-import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfastOutlined'
-import IcecreamIcon from '@mui/icons-material/IcecreamOutlined'
-import RestaurantIcon from '@mui/icons-material/RestaurantOutlined'
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenuOutlined'
-import EggAltIcon from '@mui/icons-material/EggAltOutlined'
+import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast'
+import RemoveRedEyeOutlined from '@mui/icons-material/RemoveRedEyeOutlined'
+import PriceCheck from '@mui/icons-material/PriceCheck'
 
 export const categories = () => {
   return [
-    { id: '1', label: 'Dairy Eggs', icon: EggIcon },
-    { id: '2', label: 'Breakfast', icon: FreeBreakfastIcon },
-    { id: '3', label: 'Frozen', icon: IcecreamIcon },
-    { id: '4', label: 'Vegetables', icon: RestaurantIcon },
-    { id: '5', label: 'Fruits & Vegetables', icon: RestaurantMenuIcon },
-    { id: '6', label: 'Dairy & Eggs', icon: EggAltIcon },
+    { id: 'free-ebooks', label: 'Free E-Books', icon: FreeBreakfastIcon },
+    { id: 'paid-ebooks', label: 'Paid E-Books', icon: PriceCheck },
+    { id: 'full', label: 'Viewable', icon: RemoveRedEyeOutlined },
   ]
 }

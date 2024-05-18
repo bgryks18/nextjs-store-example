@@ -34,7 +34,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontFamily: 'inherit',
-          boxShadow: 'none',
           background: 'white',
         },
       },

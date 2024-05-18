@@ -1,12 +1,14 @@
+'use client'
 import { Divider, MenuItem, Paper, Typography } from '@mui/material'
 import { makeStyles } from 'tss-react/mui'
 import { PATH } from '@/types/common'
 import { categories } from '@/utils/ui'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import classnames from 'classnames'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
-    marginRight: 36,
     position: 'sticky',
     top: 100,
     left: 0,
@@ -30,7 +32,6 @@ const useStyles = makeStyles()((theme) => ({
       display: 'flex',
       alignItems: 'center',
       columnGap: 8,
-      padding: '4px 12px',
     },
     [theme.breakpoints.down('md')]: {
       display: 'flex',
@@ -60,11 +61,37 @@ const useStyles = makeStyles()((theme) => ({
   },
   linkItem: {
     textDecoration: 'none !important',
+
+    [theme.breakpoints.up('md')]: {
+      '&:last-child': {
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+      },
+      '&>*:last-child': {
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+      },
+    },
+    [theme.breakpoints.down('md')]: {
+      marginInline: 6,
+      borderRadius: '0 !important',
+    },
+  },
+  active: {
+    background: theme.palette.primary.main,
+    '& .MuiMenuItem-root': {
+      color: `${theme.palette.background.default} !important`,
+    },
+    '&:hover': {
+      background: theme.palette.primary.main,
+    },
   },
 }))
 
 const Sidebar = () => {
   const { classes } = useStyles()
+  const searchParams = useSearchParams()
+
   return (
     <div className={classes.container}>
       <Paper className={classes.paper}>
@@ -76,17 +103,21 @@ const Sidebar = () => {
         {categories().map((item) => (
           <Link
             href={{
-              pathname: PATH.CATEGORY_DETAIL,
+              pathname: PATH.HOME,
               query: {
-                categoryId: item.id,
+                category: item.id,
               },
             }}
-            className={classes.linkItem}
+            className={classnames(classes.linkItem, {
+              [classes.active]: searchParams
+                .getAll('category')
+                .includes(item.id),
+            })}
             key={item.id}
           >
             <MenuItem>
               <item.icon />
-              <Typography variant="body2" fontWeight="bold" component="span">
+              <Typography variant="body2" fontWeight="medium" component="span">
                 {item.label}
               </Typography>
             </MenuItem>

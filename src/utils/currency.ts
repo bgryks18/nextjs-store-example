@@ -1,8 +1,9 @@
 export const getCurrency = (
   value: number,
-  opts: Intl.NumberFormatOptions = {}
+  opts: Intl.NumberFormatOptions = {},
+  country: string = 'US'
 ) => {
-  return Intl.NumberFormat('en-US', {
+  return Intl.NumberFormat(country, {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
     style: 'currency',

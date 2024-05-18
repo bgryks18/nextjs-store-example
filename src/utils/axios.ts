@@ -24,8 +24,6 @@ const requestError = (error: AxiosError): Promise<AxiosError> =>
   Promise.reject(error)
 
 const responseBefore = (response: AxiosResponse): AxiosResponse => {
-  const token = response?.headers['Session-ID']
-  if (token) localStorage.setItem('authorization', token)
   return response
 }
 
