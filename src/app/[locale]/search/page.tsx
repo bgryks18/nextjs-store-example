@@ -1,6 +1,7 @@
 import Page from '@/components/Page'
 import ProductBox from '@/components/Product/ProductBox'
 import ProductList from '@/components/Product/ProductList'
+import Text from '@/components/Text'
 import { VolumeListResponse } from '@/types/book'
 import { PATH } from '@/types/common'
 import API from '@/utils/axios'
@@ -45,10 +46,20 @@ const Search = async ({
     <Page>
       {products.length === 0 ? (
         <Typography variant="h4" component="div" fontWeight="medium">
-          No results found for the key "{keyword}"
+          <Text
+            i18nKey="common.notification.noResultForKey"
+            values={{ q: keyword }}
+          />
         </Typography>
       ) : (
-        <ProductList title={`Results for the key "${keyword}"`}>
+        <ProductList
+          title={
+            <Text
+              i18nKey="common.notification.resultForKey"
+              values={{ q: keyword }}
+            />
+          }
+        >
           {products.map((product) => (
             <ProductBox key={product.id} {...product} />
           ))}

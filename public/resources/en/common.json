@@ -1,6 +1,8 @@
 {
   "notification": {
-    "noResultForKey": "No result for the key specified.",
-    "noProductsInCard": "No products in your card."
+    "noResultForKey": "No result for {q}.",
+    "noProductsInCard": "No products in your card.",
+    "resultForKey": "Results for {q}.",
+    "noResult": "No data."
   }
 }

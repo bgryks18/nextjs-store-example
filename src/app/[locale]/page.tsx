@@ -5,7 +5,6 @@ import Text from '@/components/Text'
 import { VolumeListResponse } from '@/types/book'
 import API from '@/utils/axios'
 import { Typography } from '@mui/material'
-import { getMessages } from 'next-intl/server'
 import React from 'react'
 
 const Home = async ({
@@ -13,10 +12,6 @@ const Home = async ({
 }: {
   searchParams: Record<string, any>
 }) => {
-  const t = await getMessages()
-
-  console.log('t', t)
-
   const getData = async () => {
     const categories =
       searchParams?.category && typeof searchParams?.category === 'string'
@@ -43,7 +38,7 @@ const Home = async ({
     <Page>
       {products.length === 0 ? (
         <Typography variant="h4" component="div" fontWeight="medium">
-          No results
+          <Text i18nKey="common.notification.noResult" />
         </Typography>
       ) : (
         <ProductList title={<Text i18nKey="book.list.featuredBooks" />}>

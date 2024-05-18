@@ -19,7 +19,7 @@ export interface Volume {
     }
     pageCount: number
     printType: 'BOOK' | 'MAGAZINE' | 'ALL' | string
-    categories: string[]
+    categories?: string[]
     averageRating: number
     ratingsCount: number
     maturityRating: string
@@ -29,7 +29,7 @@ export interface Volume {
       containsEpubBubbles: boolean
       containsImageBubbles: boolean
     }
-    imageLinks: {
+    imageLinks?: {
       smallThumbnail: string
       thumbnail: string
     }
