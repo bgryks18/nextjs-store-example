@@ -1,25 +1,25 @@
 'use client'
-import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { ReactNode } from 'react'
-import Masonry from '@mui/lab/Masonry'
+import React, { ReactElement, ReactNode } from 'react'
+import {
+  Grid,
+  ImageList,
+  ImageListItem,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 
 const ProductList = ({
   title,
   children,
 }: {
   title?: string | ReactNode
-  children: ReactNode[]
+  children: ReactElement[]
 }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   return (
-    <Grid
-      item
-      container
-      columnSpacing="24px"
-      rowGap="24px"
-      sx={{ position: 'relative', margin: '0 -12px !important' }}
-    >
+    <Grid item container columnSpacing="24px" rowGap="24px">
       <Typography
         component="h2"
         variant="h4"
@@ -34,15 +34,11 @@ const ProductList = ({
       </Typography>
 
       <Grid item container>
-        <Masonry
-          columns={isMobile ? 1 : 3}
-          spacing={3}
-          defaultHeight={300}
-          defaultColumns={isMobile ? 1 : 3}
-          defaultSpacing={3}
-        >
-          {children}
-        </Masonry>
+        <ImageList variant="masonry" cols={isMobile ? 1 : 3} gap={18}>
+          {React.Children.map(children, (child) => {
+            return <ImageListItem key={child.key}>{child}</ImageListItem>
+          })}
+        </ImageList>
       </Grid>
     </Grid>
   )

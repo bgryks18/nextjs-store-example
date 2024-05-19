@@ -57,7 +57,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 10,
-    marginLeft: 12,
     minHeight: 'auto !important',
   },
 
