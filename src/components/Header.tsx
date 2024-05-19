@@ -42,6 +42,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
     top: 0,
     boxShadow: '0.5px 0.5px 2px #ddd',
+    boxSizing: 'border-box',
     [theme.breakpoints.down('md')]: {
       boxShadow: '0.5px 0.5px 2px #ddd',
       height: '60px',
@@ -49,12 +50,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   toolBar: {
+    boxSizing: 'border-box',
     color: theme.palette.common.black,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 10,
+    marginLeft: 12,
+    minHeight: 'auto !important',
   },
 
   logo: {
@@ -69,13 +73,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
 
     '& img': {
-      width: 180,
+      width: 240,
       maxWidth: '100%',
       aspectRatio: '2560/473',
     },
     [theme.breakpoints.down('md')]: {
       '& img': {
-        width: 55,
+        width: 180,
         maxWidth: '100%',
         aspectRatio: '2560/473',
       },
@@ -196,7 +200,7 @@ const Header = () => {
   return (
     <AppBar className={classes.appBar} position="sticky">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters className={classes.toolBar}>
           <Grid
             container
             justifyContent={'space-between'}
