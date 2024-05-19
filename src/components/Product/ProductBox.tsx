@@ -66,7 +66,7 @@ const useStyles = makeStyles()((theme) => ({
     },
   },
   title: {
-    '&:hover': {
+    '& a:hover': {
       color: theme.palette.primary.main,
       textDecoration: 'underline',
     },
