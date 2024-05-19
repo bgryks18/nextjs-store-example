@@ -2,6 +2,6 @@
 
 import { RedirectType, redirect } from 'next/navigation'
 
-export const redirectTo = (path: string, type: string) => {
+export const redirectTo = async (path: string, type: string) => {
   redirect(path, type as RedirectType)
 }

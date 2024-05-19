@@ -5,6 +5,7 @@ import {
   Badge,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -33,6 +34,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import qs from 'qs'
 import { useTranslations } from 'next-intl'
 import { omit } from 'lodash'
+import { redirectTo } from '@/utils/lib'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -141,6 +143,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     border: '0',
     minWidth: '118px',
     textTransform: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
     [theme.breakpoints.down('md')]: {
       height: '38px',
       minWidth: 'auto',
@@ -190,6 +195,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       padding: 0,
       margin: 0,
     },
+  },
+  progress: {
+    position: 'absolute',
+    left: 12,
+    color: '#eee',
   },
 }))
 
@@ -432,9 +442,9 @@ interface SearchFormProps {
   by: 'title' | 'author'
 }
 const SearchForm = () => {
-  const router = useRouter()
   const currentSearchParamms = useSearchParams()
   const t = useTranslations()
+  const [isLoading, setIsLoading] = useState(false)
   const currentQuery = currentSearchParamms.get('q')
   const currentBy = (currentSearchParamms.get('by') || 'title') as
     | 'title'
@@ -453,12 +463,13 @@ const SearchForm = () => {
     ) {
       return
     }
+    setIsLoading(true)
     const searchQuery = { q: data.q, by: data.by }
-    router.push(`${PATH.SEARCH}?${qs.stringify(searchQuery)}`, { scroll: true })
+    await redirectTo(`${PATH.SEARCH}?${qs.stringify(searchQuery)}`, 'push')
+    setIsLoading(false)
   }
 
   const { classes } = useStyles()
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.searchBox}>
       <Controller
@@ -492,6 +503,10 @@ const SearchForm = () => {
                   className={classes.searchButton}
                   type="submit"
                 >
+                  {isLoading && (
+                    <CircularProgress size={20} className={classes.progress} />
+                  )}
+
                   {t('search.submit')}
                 </Button>
               </>
