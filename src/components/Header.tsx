@@ -24,7 +24,7 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useCart } from '@/hooks/useCart'
 import { PATH } from '@/types/common'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { getCurrency } from '@/utils/currency'
 import Link from 'next/link'
 import { makeStyles } from 'tss-react/mui'
@@ -32,6 +32,7 @@ import Image from 'next/image'
 import { useSearchParams, useRouter } from 'next/navigation'
 import qs from 'qs'
 import { useTranslations } from 'next-intl'
+import { omit } from 'lodash'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -431,13 +432,21 @@ interface SearchFormProps {
   by: 'title' | 'author'
 }
 const SearchForm = () => {
-  const { register, handleSubmit } = useForm<SearchFormProps>()
   const router = useRouter()
   const currentSearchParamms = useSearchParams()
   const t = useTranslations()
+  const currentQuery = currentSearchParamms.get('q')
+  const currentBy = (currentSearchParamms.get('by') || 'title') as
+    | 'title'
+    | 'author'
+  const { handleSubmit, control } = useForm<SearchFormProps>({
+    defaultValues: {
+      by: currentBy,
+      q: currentQuery || '',
+    },
+  })
 
   const onSubmit: SubmitHandler<SearchFormProps> = async (data) => {
-    const currentQuery = currentSearchParamms.get('q')
     if (
       (!currentQuery && !data.q.trim()) ||
       (currentQuery && currentQuery.trim() === data.q.trim())
@@ -452,36 +461,44 @@ const SearchForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.searchBox}>
-      <OutlinedInput
-        size="medium"
-        margin="none"
-        placeholder={t('search.placeholder')}
-        startAdornment={<SearchIcon color="action" />}
-        defaultValue={currentSearchParamms.get('q')}
-        endAdornment={
-          <>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="By"
-              className={classes.select}
-              defaultValue="title"
-              {...register('by')}
-              // onChange={handleChange}
-            >
-              <MenuItem value={'title'}>{t('search.filter.title')}</MenuItem>
-              <MenuItem value={'author'}>{t('search.filter.author')}</MenuItem>
-            </Select>
-            <Button
-              variant="contained"
-              className={classes.searchButton}
-              type="submit"
-            >
-              {t('search.submit')}
-            </Button>
-          </>
-        }
-        {...register('q')}
+      <Controller
+        name="q"
+        control={control}
+        render={({ field }) => (
+          <OutlinedInput
+            size="medium"
+            margin="none"
+            placeholder={t('search.placeholder')}
+            startAdornment={<SearchIcon color="action" />}
+            endAdornment={
+              <>
+                <Controller
+                  name="by"
+                  control={control}
+                  render={({ field }) => (
+                    <Select className={classes.select} {...field}>
+                      <MenuItem value={'title'}>
+                        {t('search.filter.title')}
+                      </MenuItem>
+                      <MenuItem value={'author'}>
+                        {t('search.filter.author')}
+                      </MenuItem>
+                    </Select>
+                  )}
+                />
+
+                <Button
+                  variant="contained"
+                  className={classes.searchButton}
+                  type="submit"
+                >
+                  {t('search.submit')}
+                </Button>
+              </>
+            }
+            {...field}
+          />
+        )}
       />
     </form>
   )
