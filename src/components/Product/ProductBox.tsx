@@ -65,6 +65,12 @@ const useStyles = makeStyles()((theme) => ({
       height: 32,
     },
   },
+  title: {
+    '&:hover': {
+      color: theme.palette.primary.main,
+      textDecoration: 'underline',
+    },
+  },
   price: {
     display: 'flex',
     gap: 10,
@@ -125,7 +131,12 @@ const ProductBox = (volume: Volume) => {
       />
       <CardContent className={classes.cardContent}>
         <Typography component="div" className={classes.cardInfo}>
-          <Typography variant="body1" component="div" fontWeight="bold">
+          <Typography
+            variant="body1"
+            component="div"
+            fontWeight="bold"
+            className={classes.title}
+          >
             <Link
               href={{
                 pathname: `${PATH.BOOK}/${id}`,

@@ -114,7 +114,7 @@ const useStyles = makeStyles()((theme) => ({
 const ProductBox = (volume: Volume) => {
   const t = useTranslations()
 
-  const { id, volumeInfo, saleInfo } = volume
+  const { volumeInfo, saleInfo } = volume
   const { classes } = useStyles()
 
   const discount =
@@ -143,13 +143,7 @@ const ProductBox = (volume: Volume) => {
       <CardContent className={classes.cardContent}>
         <Typography component="div" className={classes.cardInfo}>
           <Typography variant="body1" component="div" fontWeight="bold">
-            <Link
-              href={{
-                pathname: `${PATH.BOOK}/${id}`,
-              }}
-            >
-              {volumeInfo.title}
-            </Link>
+            {volumeInfo.title}
           </Typography>
           <Typography variant="body2" component="div" className={classes.star}>
             <Rating
@@ -174,6 +168,7 @@ const ProductBox = (volume: Volume) => {
             component="div"
             fontWeight="400"
             color="GrayText"
+            paddingInline={1}
           >
             <Typography
               dangerouslySetInnerHTML={{
