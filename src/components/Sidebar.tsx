@@ -14,8 +14,9 @@ const useStyles = makeStyles()((theme) => ({
     top: 100,
     left: 0,
     padding: 0,
-    maxHeight: 'calc(100vh + (-140px))',
     overflowY: 'auto',
+    borderRadius: 4.8,
+
     [theme.breakpoints.down('md')]: {
       top: 0,
       maxHeight: 'unset',
@@ -23,11 +24,14 @@ const useStyles = makeStyles()((theme) => ({
     },
   },
   paper: {
+    paddingBottom: 16,
     boxShadow: 'none',
     display: 'flex',
     flexDirection: 'column',
     gap: 3,
     flexWrap: 'wrap',
+    borderRadius: 4.4,
+
     '& .MuiMenuItem-root': {
       color: theme.palette.secondary.dark,
       display: 'flex',
@@ -39,7 +43,7 @@ const useStyles = makeStyles()((theme) => ({
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 0,
-      paddingBottom: 6,
+      paddingBottom: 8,
       '& .MuiMenuItem-root': {
         padding: '2px 9px',
         columnGap: 2,
@@ -62,17 +66,6 @@ const useStyles = makeStyles()((theme) => ({
   },
   linkItem: {
     textDecoration: 'none !important',
-
-    [theme.breakpoints.up('md')]: {
-      '&:last-child': {
-        borderBottomLeftRadius: 4,
-        borderBottomRightRadius: 4,
-      },
-      '&>*:last-child': {
-        borderBottomLeftRadius: 4,
-        borderBottomRightRadius: 4,
-      },
-    },
     [theme.breakpoints.down('md')]: {
       marginInline: 6,
       borderRadius: '0 !important',

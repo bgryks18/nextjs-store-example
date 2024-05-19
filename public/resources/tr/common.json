@@ -1,8 +1,8 @@
 {
   "notification": {
-    "noResultForKey": "{q} ile ilgili bir sonuç bulunamadı.",
-    "noProductsInCard": "Sepetinizde hiç ürün yok.",
+    "noResultForKey": "{q} ile ilgili bir sonuç bulunamadı",
+    "noProductsInCard": "Sepetinizde hiç ürün yok",
     "resultForKey": "{q} için sonuçlar",
-    "noResult": "Hiç veri yok."
+    "noResult": "Hiç veri yok"
   }
 }

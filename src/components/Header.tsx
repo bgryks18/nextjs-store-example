@@ -19,7 +19,6 @@ import {
   useTheme,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import PersonIcon from '@mui/icons-material/PersonOutlined'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasketOutlined'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -64,21 +63,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
     position: 'relative',
   },
   logoLink: {
-    width: 160,
+    width: 220,
     maxWidth: '100%',
-    aspectRatio: '160/45',
+    aspectRatio: '2560/473',
     position: 'relative',
 
     '& img': {
-      width: 160,
+      width: 180,
       maxWidth: '100%',
-      aspectRatio: '160/45',
+      aspectRatio: '2560/473',
     },
     [theme.breakpoints.down('md')]: {
       '& img': {
         width: 55,
         maxWidth: '100%',
-        aspectRatio: '37/10',
+        aspectRatio: '2560/473',
       },
     },
   },
@@ -192,9 +191,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 const Header = () => {
   const { classes } = useStyles()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const logoUrl = isMobile ? '/next.svg' : '/vercel.svg'
+  const logoUrl = '/logo.png'
 
   return (
     <AppBar className={classes.appBar} position="sticky">

@@ -1,3 +1,4 @@
+import React from 'react'
 import Page from '@/components/Page'
 import ProductBox from '@/components/Product/ProductBox'
 import ProductList from '@/components/Product/ProductList'
@@ -5,9 +6,8 @@ import Text from '@/components/Text'
 import { VolumeListResponse } from '@/types/book'
 import { PATH } from '@/types/common'
 import API from '@/utils/axios'
-import { Typography } from '@mui/material'
+import { Alert } from '@mui/material'
 import { redirect } from 'next/navigation'
-import React from 'react'
 
 const Search = async ({
   searchParams,
@@ -45,12 +45,12 @@ const Search = async ({
   return (
     <Page>
       {products.length === 0 ? (
-        <Typography variant="h4" component="div" fontWeight="medium">
+        <Alert component="div" variant="filled" severity="warning">
           <Text
             i18nKey="common.notification.noResultForKey"
             values={{ q: keyword }}
           />
-        </Typography>
+        </Alert>
       ) : (
         <ProductList
           title={

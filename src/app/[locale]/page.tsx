@@ -1,11 +1,11 @@
+import React from 'react'
 import Page from '@/components/Page'
 import ProductBox from '@/components/Product/ProductBox'
 import ProductList from '@/components/Product/ProductList'
 import Text from '@/components/Text'
 import { VolumeListResponse } from '@/types/book'
 import API from '@/utils/axios'
-import { Typography } from '@mui/material'
-import React from 'react'
+import { Alert } from '@mui/material'
 
 const Home = async ({
   searchParams,
@@ -37,9 +37,9 @@ const Home = async ({
   return (
     <Page>
       {products.length === 0 ? (
-        <Typography variant="h4" component="div" fontWeight="medium">
+        <Alert component="div" variant="filled" severity="warning">
           <Text i18nKey="common.notification.noResult" />
-        </Typography>
+        </Alert>
       ) : (
         <ProductList title={<Text i18nKey="book.list.featuredBooks" />}>
           {products.map((product) => (

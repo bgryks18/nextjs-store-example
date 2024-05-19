@@ -4,7 +4,7 @@
   "goToCart": "Go to cart",
   "total": "Total",
   "form": {
-    "title": "Add a new card to continue.",
+    "title": "Add a new card to continue",
     "cardNumber": "Card Number",
     "expiryDate": "Expiry Date",
     "cardHolderName": "Card Holder Name",

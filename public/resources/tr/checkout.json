@@ -4,7 +4,7 @@
   "goToCart": "Sepete git",
   "total": "Toplam",
   "form": {
-    "title": "Devam etmek için bir kart ekleyin.",
+    "title": "Devam etmek için bir kart ekleyin",
     "cardNumber": "Kart Numarası",
     "expiryDate": "Son Kullanım Tarihi",
     "cardHolderName": "Kart Sahibi Adı",
