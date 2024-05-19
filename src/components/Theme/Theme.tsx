@@ -1,14 +1,7 @@
 'use client'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { ReactNode } from 'react'
-import {
-  blueGrey,
-  blue,
-  common,
-  grey,
-  yellow,
-  orange,
-} from '@mui/material/colors'
+import { blueGrey, blue, common, grey, orange } from '@mui/material/colors'
 import { NextAppDirEmotionCacheProvider } from 'tss-react/next/appDir'
 
 const theme = createTheme({
