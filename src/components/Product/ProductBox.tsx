@@ -14,7 +14,7 @@ import { Volume } from '@/types/book'
 import DiscountIcon from '@mui/icons-material/Discount'
 import Link from 'next/link'
 import { PATH } from '@/types/common'
-import DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 
 const useStyles = makeStyles()((theme) => ({
   container: {

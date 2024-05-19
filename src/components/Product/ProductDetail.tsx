@@ -17,7 +17,7 @@ import { PATH } from '@/types/common'
 import { Chip } from '@mui/material'
 import LinkIcon from '@mui/icons-material/Link'
 import { useTranslations } from 'next-intl'
-import DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
