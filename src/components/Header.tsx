@@ -30,11 +30,13 @@ import { getCurrency } from '@/utils/currency'
 import Link from 'next/link'
 import { makeStyles } from 'tss-react/mui'
 import Image from 'next/image'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import qs from 'qs'
-import { useTranslations } from 'next-intl'
-import { omit } from 'lodash'
-import { redirectTo } from '@/utils/lib'
+import { useLocale, useTranslations } from 'next-intl'
+import { Locale } from '@/types/i18n'
+import { useRouter } from '@/utils/navigation'
+import { countryFlags } from '@/utils/country'
+import { getLocales } from '@/utils/getLocales'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -166,15 +168,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
   iconButton: {
     backgroundColor: theme.palette.background.default,
   },
+  icon: {
+    width: 24,
+    height: 24,
+  },
   popover: {
     width: '300px',
   },
   menuItem: {
     padding: '6px 16px',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     minHeight: '30px',
+    gap: 4,
     [theme.breakpoints.down('md')]: {
       padding: '3px 9px',
     },
@@ -243,9 +249,11 @@ const MenuLinks = () => {
   const { classes } = useStyles()
   const userBasketPopoverId = useId()
   const userMobileMenuId = useId()
+  const userLanguageMenuId = useId()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const t = useTranslations()
+  const locale = useLocale()
   const { cart, cartCount, cartTotal } = useCart()
 
   const [anchorUserBasketPopoverEl, setAnchorUserBasketPopoverEl] =
@@ -253,6 +261,15 @@ const MenuLinks = () => {
 
   const [anchorUserMobileMenuEl, setAnchorUserMobileMenuEl] =
     useState<HTMLButtonElement | null>(null)
+
+  const [anchorUserLanguageMenuEl, setAnchorUserLanguageMenuEl] =
+    useState<HTMLButtonElement | null>(null)
+
+  const handleUserLanguageMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorUserLanguageMenuEl(event.currentTarget)
+  }
 
   const handleUserBasketPopoverClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -272,11 +289,12 @@ const MenuLinks = () => {
 
   const handleUserMobileMenuClose = () => {
     setAnchorUserMobileMenuEl(null)
+    setAnchorUserLanguageMenuEl(null)
   }
 
   const isUserBasketPopoverOpen = Boolean(anchorUserBasketPopoverEl)
   const isUserMobileMenuOpen = Boolean(anchorUserMobileMenuEl)
-
+  const isUserLanguageMenuOpen = Boolean(anchorUserLanguageMenuEl)
   const cartItems = cart.map((item) => (
     <Typography
       variant={isMobile ? 'caption' : 'body2'}
@@ -298,7 +316,11 @@ const MenuLinks = () => {
       </span>
     </Typography>
   ))
+  const setLanguage = async (lang: Locale) => {
+    window.location.replace(PATH.HOME + lang)
+  }
 
+  const CurrentFlag = countryFlags[locale as Locale]
   const renderMenu = (
     <>
       <Badge badgeContent={cartCount} color="primary">
@@ -310,6 +332,42 @@ const MenuLinks = () => {
           <ShoppingBasketIcon />
         </IconButton>
       </Badge>
+      <IconButton
+        size="large"
+        className={classes.iconButton}
+        onClick={handleUserLanguageMenuClick}
+      >
+        <CurrentFlag className={classes.icon} />
+      </IconButton>
+      <Menu
+        id={userLanguageMenuId}
+        open={isUserLanguageMenuOpen}
+        anchorEl={anchorUserLanguageMenuEl}
+        onClose={handleUserMobileMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        classes={{ paper: classes.popover }}
+      >
+        {getLocales().map((locale) => {
+          const Flag = countryFlags[locale]
+          return (
+            <MenuItem
+              className={classes.menuItem}
+              key={locale}
+              onClick={() => {
+                setLanguage(locale)
+              }}
+            >
+              <Flag className={classes.icon} />
+              <Typography variant="body2" component="span" fontWeight={400}>
+                {t(`common.language.${locale}`)}
+              </Typography>
+            </MenuItem>
+          )
+        })}
+      </Menu>
       <Menu
         id={userBasketPopoverId}
         open={isUserBasketPopoverOpen}
@@ -444,8 +502,10 @@ interface SearchFormProps {
 const SearchForm = () => {
   const currentSearchParamms = useSearchParams()
   const t = useTranslations()
+  const locale = useLocale()
   const [isLoading, setIsLoading] = useState(false)
   const currentQuery = currentSearchParamms.get('q')
+  const router = useRouter()
   const currentBy = (currentSearchParamms.get('by') || 'title') as
     | 'title'
     | 'author'
@@ -465,7 +525,8 @@ const SearchForm = () => {
     }
     setIsLoading(true)
     const searchQuery = { q: data.q, by: data.by }
-    await redirectTo(`${PATH.SEARCH}?${qs.stringify(searchQuery)}`, 'push')
+    const searchString = qs.stringify(searchQuery)
+    router.replace(PATH.SEARCH + '?' + searchString, { locale: locale })
     setIsLoading(false)
   }
 

@@ -4,5 +4,9 @@
     "noProductsInCard": "Sepetinizde hiç ürün yok",
     "resultForKey": "{q} için sonuçlar",
     "noResult": "Hiç veri yok"
+  },
+  "language": {
+    "tr": "Türkçe",
+    "en": "İngilizce"
   }
 }

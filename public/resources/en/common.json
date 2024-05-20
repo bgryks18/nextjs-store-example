@@ -4,5 +4,9 @@
     "noProductsInCard": "No products in your card",
     "resultForKey": "Results for {q}",
     "noResult": "No data"
+  },
+  "language": {
+    "tr": "Turkish",
+    "en": "English"
   }
 }
