@@ -34,9 +34,22 @@ const ProductList = ({
       </Typography>
 
       <Grid item container>
-        <ImageList variant="masonry" cols={isMobile ? 1 : 3} gap={18}>
+        <ImageList
+          variant="masonry"
+          cols={isMobile ? 1 : 3}
+          gap={18}
+          component="div"
+          sx={{
+            padding: 0.5,
+            margin: -0.5,
+          }}
+        >
           {React.Children.map(children, (child) => {
-            return <ImageListItem key={child.key}>{child}</ImageListItem>
+            return (
+              <ImageListItem key={child.key} component="div">
+                {child}
+              </ImageListItem>
+            )
           })}
         </ImageList>
       </Grid>
