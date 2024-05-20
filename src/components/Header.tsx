@@ -37,6 +37,7 @@ import { Locale } from '@/types/i18n'
 import { useRouter } from '@/utils/navigation'
 import { countryFlags } from '@/utils/country'
 import { getLocales } from '@/utils/getLocales'
+import classNames from 'classnames'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -174,6 +175,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   popover: {
     width: '300px',
+    '& .MuiDivider-root': {
+      marginBlock: 4,
+    },
   },
   menuItem: {
     padding: '6px 16px',
@@ -184,6 +188,17 @@ const useStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       padding: '3px 9px',
     },
+  },
+  inlineLanguageSwitch: {
+    display: 'flex',
+    gap: 4,
+    position: 'relative',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  inlineLanguageSelect: {
+    marginLeft: 'auto',
   },
   quantity: {
     fontWeight: 400,
@@ -248,8 +263,8 @@ export default Header
 const MenuLinks = () => {
   const { classes } = useStyles()
   const userBasketPopoverId = useId()
-  const userMobileMenuId = useId()
   const userLanguageMenuId = useId()
+  const mobileMenuId = useId()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const t = useTranslations()
@@ -259,10 +274,10 @@ const MenuLinks = () => {
   const [anchorUserBasketPopoverEl, setAnchorUserBasketPopoverEl] =
     useState<HTMLButtonElement | null>(null)
 
-  const [anchorUserMobileMenuEl, setAnchorUserMobileMenuEl] =
+  const [anchorUserLanguageMenuEl, setAnchorUserLanguageMenuEl] =
     useState<HTMLButtonElement | null>(null)
 
-  const [anchorUserLanguageMenuEl, setAnchorUserLanguageMenuEl] =
+  const [anchorMobileeMenuEl, setAnchorMobileeMenuEl] =
     useState<HTMLButtonElement | null>(null)
 
   const handleUserLanguageMenuClick = (
@@ -277,24 +292,22 @@ const MenuLinks = () => {
     setAnchorUserBasketPopoverEl(event.currentTarget)
   }
 
-  const handleUserBasketPopoverClose = () => {
-    setAnchorUserBasketPopoverEl(null)
-  }
-
-  const handleUserMobileMenuClick = (
+  const handleMobileMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    setAnchorUserMobileMenuEl(event.currentTarget)
+    setAnchorMobileeMenuEl(event.currentTarget)
   }
 
-  const handleUserMobileMenuClose = () => {
-    setAnchorUserMobileMenuEl(null)
+  const handleMenuClose = () => {
+    setAnchorUserBasketPopoverEl(null)
     setAnchorUserLanguageMenuEl(null)
+    setAnchorMobileeMenuEl(null)
   }
 
   const isUserBasketPopoverOpen = Boolean(anchorUserBasketPopoverEl)
-  const isUserMobileMenuOpen = Boolean(anchorUserMobileMenuEl)
   const isUserLanguageMenuOpen = Boolean(anchorUserLanguageMenuEl)
+  const isMobileMenuOpen = Boolean(anchorMobileeMenuEl)
+
   const cartItems = cart.map((item) => (
     <Typography
       variant={isMobile ? 'caption' : 'body2'}
@@ -307,7 +320,7 @@ const MenuLinks = () => {
       </span>
       <span className={classes.price}>
         {getCurrency(
-          (item.volume.saleInfo.retailPrice?.amount || 0) * item.quantity,
+          (item.volume.saleInfo.retailPrice!.amount || 0) * item.quantity,
           {
             currency: item.volume.saleInfo.retailPrice!.currencyCode,
           },
@@ -321,6 +334,7 @@ const MenuLinks = () => {
   }
 
   const CurrentFlag = countryFlags[locale as Locale]
+
   const renderMenu = (
     <>
       <Badge badgeContent={cartCount} color="primary">
@@ -343,7 +357,7 @@ const MenuLinks = () => {
         id={userLanguageMenuId}
         open={isUserLanguageMenuOpen}
         anchorEl={anchorUserLanguageMenuEl}
-        onClose={handleUserMobileMenuClose}
+        onClose={handleMenuClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -372,7 +386,7 @@ const MenuLinks = () => {
         id={userBasketPopoverId}
         open={isUserBasketPopoverOpen}
         anchorEl={anchorUserBasketPopoverEl}
-        onClose={handleUserBasketPopoverClose}
+        onClose={handleMenuClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -393,7 +407,7 @@ const MenuLinks = () => {
                 {getCurrency(
                   cartTotal,
                   {
-                    currency: cart[0].volume.saleInfo.retailPrice?.currencyCode,
+                    currency: cart[0].volume.saleInfo.retailPrice!.currencyCode,
                   },
                   cart[0].volume.saleInfo.country
                 )}
@@ -426,23 +440,57 @@ const MenuLinks = () => {
         <IconButton
           size="small"
           className={classes.iconButton}
-          onClick={handleUserMobileMenuClick}
+          onClick={handleMobileMenuClick}
         >
           <MoreIcon />
         </IconButton>
       </Badge>
 
       <Menu
-        id={userMobileMenuId}
-        open={isUserMobileMenuOpen}
-        anchorEl={anchorUserMobileMenuEl}
-        onClose={handleUserMobileMenuClose}
+        id={mobileMenuId}
+        open={isMobileMenuOpen}
+        anchorEl={anchorMobileeMenuEl}
+        onClose={handleMenuClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }}
         classes={{ paper: classes.popover }}
       >
+        <Typography className={classes.inlineLanguageSwitch} component="div">
+          <Typography
+            component="div"
+            className={classes.menuItem}
+            variant="caption"
+          >
+            <CurrentFlag className={classes.icon} />
+            {t(`common.language.${locale}`)}
+          </Typography>
+
+          <Select
+            className={classNames(classes.select, classes.inlineLanguageSelect)}
+          >
+            {getLocales().map((locale) => {
+              const Flag = countryFlags[locale]
+              return (
+                <MenuItem
+                  className={classes.menuItem}
+                  key={locale}
+                  onClick={() => {
+                    setLanguage(locale)
+                  }}
+                >
+                  <Flag className={classes.icon} />
+                  <Typography variant="body2" component="span" fontWeight={400}>
+                    {t(`common.language.${locale}`)}
+                  </Typography>
+                </MenuItem>
+              )
+            })}
+          </Select>
+        </Typography>
+        <Divider />
+
         {cartCount > 0 ? (
           <Box>
             {cartItems}
@@ -457,20 +505,15 @@ const MenuLinks = () => {
                 {getCurrency(
                   cartTotal,
                   {
-                    currency: cart[0].volume.saleInfo.retailPrice?.currencyCode,
+                    currency: cart[0].volume.saleInfo.retailPrice!.currencyCode,
                   },
                   cart[0].volume.saleInfo.country
                 )}
               </span>
             </Typography>
-            <MenuItem
-              onClick={handleUserMobileMenuClose}
-              className={classes.menuItem}
-            >
+            <MenuItem onClick={handleMenuClose} className={classes.menuItem}>
               <Typography variant="caption" component="span" fontWeight={400}>
-                <Link href={PATH.CHECKOUT}>
-                  {t('common.notification.noProductsInCard')}
-                </Link>
+                <Link href={PATH.CHECKOUT}>{t('checkout.goToCart')}</Link>
               </Typography>
             </MenuItem>
           </Box>
@@ -486,7 +529,6 @@ const MenuLinks = () => {
       </Menu>
     </>
   )
-
   return (
     <div className={classes.links}>
       {!isMobile && renderMenu}
