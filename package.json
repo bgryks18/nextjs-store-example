@@ -31,7 +31,6 @@
     "tss-react": "^4.9.10"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.0.5",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20",
     "@types/qs": "^6.9.15",

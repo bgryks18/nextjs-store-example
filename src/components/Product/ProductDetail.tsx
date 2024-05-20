@@ -1,5 +1,5 @@
 'use client'
-import { MouseEvent, useRef } from 'react'
+import { MouseEvent, useEffect, useRef } from 'react'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -18,6 +18,7 @@ import { Chip } from '@mui/material'
 import LinkIcon from '@mui/icons-material/Link'
 import { useTranslations } from 'next-intl'
 import DOMPurify from 'isomorphic-dompurify'
+import Skeleton from '@mui/material/Skeleton'
 
 const useStyles = makeStyles()((theme) => ({
   container: {
@@ -56,6 +57,7 @@ const useStyles = makeStyles()((theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     rowGap: 8,
+    width: '100%',
   },
   cardActions: {
     flexDirection: 'column',
@@ -127,6 +129,13 @@ const ProductBox = (volume: Volume) => {
   const sanitizedImageLink = DOMPurify.sanitize(
     volumeInfo.imageLinks?.thumbnail || ''
   )
+  const descriptionRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      descriptionRef.current.innerHTML = sanitizedDescription
+    }
+  }, [])
 
   return (
     <Card className={classes.container}>
@@ -170,11 +179,11 @@ const ProductBox = (volume: Volume) => {
             color="GrayText"
             paddingInline={1}
           >
-            <Typography
-              dangerouslySetInnerHTML={{
-                __html: sanitizedDescription,
-              }}
-            ></Typography>
+            <Typography component="div" ref={descriptionRef}>
+              <Skeleton width={'100%'} height={30} />
+              <Skeleton width={'100%'} height={30} />
+              <Skeleton width={'100%'} height={30} />
+            </Typography>
           </Typography>
 
           {volumeInfo.previewLink && (
