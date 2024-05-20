@@ -54,7 +54,6 @@ export default function CheckoutForm() {
   }, [])
 
   if (cart.length === 0 || !cartTotal) {
-    redirectTo(PATH.HOME, 'replace')
     return <></>
   }
 
